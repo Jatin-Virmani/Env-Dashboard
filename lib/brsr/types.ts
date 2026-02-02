@@ -47,3 +47,21 @@ export type BRSRAuditEntry = {
   newValue?: string | number | null;
   source: string;
 }
+
+export type BRSRGeneralDisclosures = {
+  cin: string;
+  name: string;
+  yearOfIncorporation: number;
+  registeredOfficeAddress: string;
+  corporateAddress: string;
+  email: string;
+  telephone: string;
+  website: string;
+  financialYear: string;
+  stockExchanges: string;
+  paidUpCapital: number;
+  contactPersonName: string;
+  contactPersonTelephone: string;
+  contactPersonEmail: string;
+  reportingBoundary: "standalone" | "consolidated";
+};

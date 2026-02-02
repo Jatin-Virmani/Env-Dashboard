@@ -21,6 +21,39 @@ export function sampleMetricsForTab(
   fy: string
 ): BRSRMetric[] {
   const indicators = TAB_INDICATORS[tab] ?? [];
+  
+  // Special handling for General Disclosures
+  if (tab === "General Disclosures") {
+    return indicators.map((ind) => {
+      const sampleValues: Record<string, string | number> = {
+        "A.1": "L12345MH2000PLC123456",
+        "A.2": "Demo Listed Entity",
+        "A.3": 2000,
+        "A.4": "123 Corporate Tower, Business District, Mumbai - 400001",
+        "A.5": "123 Corporate Tower, Business District, Mumbai - 400001",
+        "A.6": "contact@demoentity.com",
+        "A.7": "+91-22-12345678",
+        "A.8": "https://www.demoentity.com",
+        "A.9": fy,
+        "A.10": "BSE, NSE",
+        "A.11": 5000000000,
+        "A.12": "John Doe, +91-22-12345678, john.doe@demoentity.com",
+        "A.13": "consolidated",
+      };
+      return {
+        indicatorId: ind.id,
+        label: ind.label,
+        value: sampleValues[ind.id] ?? "—",
+        unit: ind.unit,
+        previousValue: null,
+        status: "compliant" as const,
+        target: null,
+        source: "Company records",
+        asOf: fy,
+      };
+    });
+  }
+  
   return indicators.map((ind, i) => ({
     indicatorId: ind.id,
     label: ind.label,

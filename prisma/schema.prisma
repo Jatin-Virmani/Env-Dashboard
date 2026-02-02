@@ -41,3 +41,142 @@ model UploadHistory {
 
   @@index([createdAt])
 }
+
+model BRSRCompany {
+  id          String                   @id @default(cuid())
+  cin         String                   @unique
+  name        String
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
+  disclosures BRSRGeneralDisclosures[]
+  metrics     BRSRMetric[]
+  facilities  BRSRFacility[]
+  compliance  BRSRCompliance[]
+  risks       BRSRRisk[]
+  audit       BRSRAudit[]
+
+  @@index([cin])
+  @@index([name])
+}
+
+model BRSRFacility {
+  id        String       @id @default(cuid())
+  companyId String
+  company   BRSRCompany  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name      String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  metrics   BRSRMetric[]
+  audit     BRSRAudit[]
+
+  @@index([companyId])
+}
+
+model BRSRGeneralDisclosures {
+  id                      String      @id @default(cuid())
+  companyId               String      @unique
+  company                 BRSRCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  cin                     String
+  name                    String
+  yearOfIncorporation     Int
+  registeredOfficeAddress String
+  corporateAddress        String
+  email                   String
+  telephone               String
+  website                 String
+  financialYear           String
+  stockExchanges          String
+  paidUpCapital           Float
+  contactPersonName       String
+  contactPersonTelephone  String
+  contactPersonEmail      String
+  reportingBoundary       String // "standalone" | "consolidated"
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+
+  @@index([companyId])
+}
+
+model BRSRMetric {
+  id            String        @id @default(cuid())
+  companyId     String
+  company       BRSRCompany   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  facilityId    String?
+  facility      BRSRFacility? @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  indicatorId   String
+  label         String
+  value         String? // Store as string to handle both numbers and text
+  unit          String?
+  previousValue String?
+  target        String?
+  status        String // "compliant" | "partial" | "non-compliant" | "not-reported"
+  source        String?
+  asOf          String? // Financial year
+  principle     Int
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([companyId, indicatorId, asOf])
+  @@index([companyId])
+  @@index([facilityId])
+  @@index([indicatorId])
+  @@index([principle])
+  @@index([asOf])
+}
+
+model BRSRCompliance {
+  id        String      @id @default(cuid())
+  companyId String
+  company   BRSRCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  principle Int
+  section   String
+  question  String
+  status    String // "compliant" | "partial" | "non-compliant" | "not-reported"
+  evidence  String?
+  gap       String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([companyId])
+  @@index([principle])
+}
+
+model BRSRRisk {
+  id          String      @id @default(cuid())
+  companyId   String
+  company     BRSRCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  category    String
+  description String
+  severity    String // "high" | "medium" | "low"
+  indicatorId String?
+  mitigation  String?
+  reportedAt  DateTime    @default(now())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([companyId])
+  @@index([severity])
+  @@index([reportedAt])
+}
+
+model BRSRAudit {
+  id            String        @id @default(cuid())
+  companyId     String
+  company       BRSRCompany   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  facilityId    String?
+  facility      BRSRFacility? @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  dataPoint     String
+  indicatorId   String?
+  action        String // "create" | "update" | "delete" | "upload" | "export"
+  userId        String?
+  timestamp     DateTime      @default(now())
+  previousValue String?
+  newValue      String?
+  source        String
+
+  @@index([companyId])
+  @@index([facilityId])
+  @@index([indicatorId])
+  @@index([timestamp])
+  @@index([action])
+}
