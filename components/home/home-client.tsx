@@ -29,6 +29,12 @@ export function HomeClient() {
               <Link href="/history">View data history</Link>
             </Button>
             <Button asChild variant="outline">
+              <Link href="/thermography">Thermography</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/energy-audit">Energy Audit</Link>
+            </Button>
+            <Button asChild variant="outline">
               <Link href="/rsti">RSTI Engine</Link>
             </Button>
             <Button asChild variant="outline">

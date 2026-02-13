@@ -1,0 +1,13 @@
+﻿,,,,,,,,,,,,,,,
+,,,"Chiller
+Pump-1","Chiller
+Pump-2","Chiller
+Pump-3",,"Condenser
+Pump-1",,,"Condenser
+Pump-2",,,"Condenser
+Pump-3",,
+,Motor details,,,,,,,,,,,,,,
+,Rated(kW),,15,15,15,,18.5,,,18.5,,,18.5,,
+,Pump Details,,,,,,,,,,,,,,
+,Head (m),,36,36,36,,36,,,36,,,36,,
+,Flow (M3/Hr),,100,100,100,,100,,,100,,,100,,

@@ -1,0 +1,17 @@
+﻿STEP 1,Measure the Floor area of the interior :,"Area = 18 x 14
+= 252 sqft"
+STEP 2,"Calculate the Room Index
+18 x 14 / 10 (18 + 14) = .78",RI = .78
+STEP 3,"Determine the total circuit watts of the installation by a
+power meter if a separate feeder for lighting is available.
+If the actual value is not known a reasonable approximate
+can be obtained by totaling up the lamp wattage including
+the ballasts","Total Circuit watts
+54 W x 16 = 864
+32 W x 4 = 128
+TOTAL = 992W"
+STEP 4,"Calculate Watts per square meter, Value of Step 3 ÷ Value
+of Step 1",W/m2 = 3.9
+STEP 5,"Ascertain the average maintained luminance by using Lux
+Meter, Eav. Maintained",Eav.maint = 286
+STEP 6,Divide 5 by 4 to calculate Lux per Watt per square Meter,Lux/W/m2 = 72.77

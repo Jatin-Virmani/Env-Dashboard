@@ -1,0 +1,19 @@
+﻿Activity,Illumination
+,"(lux, lumen/m2)"
+Public areas with dark surroundings,20 -50
+Simple orientation for short visits,50 -100
+Working areas where visual tasks are only occasionally performed,100 -150
+"Warehouse, Homes, Theaters, Archives",150
+"Easy Office work, classes",250
+"Normal Office work, PC work, Study library, Groceries, show room,",500
+laboratories,
+"Supermarkets, Mechanical workshops, Office landscapes",750
+"Normal Drawing work, very detailed mechanical works",1000
+"Detailed drawing work, very detailed mechanical works",1500 -2000
+Performance of visual tasks of low contract and very small size for,2000 -5000
+prolonged periods of time,
+Performance of visual tasks of low contract and very small size for,2000 -5000
+prolonged period of time,
+Performance of very prolonged and exacting visuals tasks,5000 – 10000
+Performance of very special visual tasks of extremely low contract and,10000 - 20000
+small size,
