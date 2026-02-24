@@ -820,7 +820,7 @@ export function BRSRClient() {
                           {(!data?.metricsByTab[tab] || data.metricsByTab[tab].length === 0) && (
                             <TableRow>
                               <TableCell colSpan={6} className="text-center text-muted-foreground">
-                                No metrics for this tab. Click "Add Data" to input values.
+                                No metrics for this tab. Click &quot;Add Data&quot; to input values.
                               </TableCell>
                             </TableRow>
                           )}

@@ -40,6 +40,9 @@ export function HomeClient() {
             <Button asChild variant="outline">
               <Link href="/brsr">BRSR Dashboard</Link>
             </Button>
+            <Button asChild variant="outline">
+              <Link href="/sdg-action-items">SDG Action Items</Link>
+            </Button>
             <ThemeToggle />
           </div>
         </div>

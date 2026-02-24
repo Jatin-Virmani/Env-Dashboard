@@ -100,7 +100,7 @@ export function EnergyAuditClient() {
             <CardContent>
               <p className="text-destructive">{error}</p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Make sure you've run the extraction script: <code className="rounded bg-muted px-1">python scripts\extract_reports.py</code>
+                Make sure you&apos;ve run the extraction script: <code className="rounded bg-muted px-1">python scripts\extract_reports.py</code>
               </p>
             </CardContent>
           </Card>
