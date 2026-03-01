@@ -27,6 +27,7 @@ import {
   UtensilsCrossed,
   Waves,
 } from "lucide-react";
+import { UNIVERSITY_METRICS } from "@/lib/university-metrics";
 
 type ApiContribution = {
   id: string;
@@ -46,10 +47,19 @@ type ApiResponse = {
   source?: "university";
 };
 
+type ElectricitySummary = {
+  total: number;
+  average: number | null;
+  max: number | null;
+  min: number | null;
+  unit: string;
+  sourceFile?: string;
+};
+
 type ElectricitySummaryResponse =
   | {
       ok: true;
-      electricityConsumed: { value: number; unit: string; sourceFile?: string } | null;
+      electricityConsumed: ElectricitySummary | null;
     }
   | { ok: false; message: string };
 
@@ -133,7 +143,7 @@ export function SdgActionItemsClient() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [totals, setTotals] = React.useState<ApiResponse["totals"] | null>(null);
-  const [electricity, setElectricity] = React.useState<{ value: number; unit: string } | null>(null);
+  const [electricity, setElectricity] = React.useState<ElectricitySummary | null>(null);
   const [electricityLoading, setElectricityLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -199,9 +209,7 @@ export function SdgActionItemsClient() {
         }
 
         if (!cancelled) {
-          setElectricity(
-            json.electricityConsumed ? { value: json.electricityConsumed.value, unit: json.electricityConsumed.unit } : null,
-          );
+          setElectricity(json.electricityConsumed ?? null);
         }
       } catch {
         if (!cancelled) setElectricity(null);
@@ -274,11 +282,222 @@ export function SdgActionItemsClient() {
             </CardHeader>
             <CardContent className="flex items-baseline justify-between gap-3">
               <div className="font-mono text-3xl font-semibold tabular-nums">
-                {electricityLoading ? "…" : electricity ? Math.round(electricity.value).toLocaleString() : "—"}
+                {electricityLoading ? "…" : electricity ? Math.round(electricity.total).toLocaleString() : "—"}
               </div>
               <div className="text-sm text-muted-foreground">
                 {electricityLoading ? "" : electricity ? electricity.unit : "No energy data yet"}
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Potable water (tubewells)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-muted-foreground">Total {UNIVERSITY_METRICS.potableWater.year}</span>
+                <span className="font-mono font-semibold tabular-nums">
+                  {UNIVERSITY_METRICS.potableWater.total.toLocaleString()} {UNIVERSITY_METRICS.potableWater.unit}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                <span>MRU tubewell</span>
+                <span className="font-mono">
+                  {UNIVERSITY_METRICS.potableWater.mruTubewell.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                <span>Boys hostel</span>
+                <span className="font-mono">
+                  {UNIVERSITY_METRICS.potableWater.hostelTubewell.toLocaleString()}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Solar & green infrastructure</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm text-muted-foreground">
+              <div className="flex items-center justify-between gap-3">
+                <span>Installed solar</span>
+                <span className="font-mono font-semibold tabular-nums">
+                  {UNIVERSITY_METRICS.solar.installedKw.toFixed(2)} kWp
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span>Proposed solar</span>
+                <span className="font-mono font-semibold tabular-nums">
+                  {UNIVERSITY_METRICS.solar.proposedKw.toLocaleString()} kWp
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3 text-xs">
+                <span>Annual solar generation</span>
+                <span className="font-mono">
+                  {UNIVERSITY_METRICS.solar.annualGenerationKwh.toLocaleString()} kWh
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3 text-xs">
+                <span>Campus under green belt</span>
+                <span className="font-mono">
+                  {UNIVERSITY_METRICS.greenBelt.percentArea}%
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">STP electricity (plant only)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-xs text-muted-foreground">
+              <div className="flex items-center justify-between gap-3 text-sm">
+                <span>Period</span>
+                <span className="font-mono">
+                  {UNIVERSITY_METRICS.stpElectricity.periodLabel}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3 text-sm">
+                <span>Total consumption</span>
+                <span className="font-mono font-semibold tabular-nums">
+                  {UNIVERSITY_METRICS.stpElectricity.totalKWh.toLocaleString()} kWh
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span>Meter reading range</span>
+                <span className="font-mono">
+                  {UNIVERSITY_METRICS.stpElectricity.startReading.toLocaleString()} →{" "}
+                  {UNIVERSITY_METRICS.stpElectricity.endReading.toLocaleString()}
+                </span>
+              </div>
+              <div className="mt-2">
+                <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide">Monthly STP readings</div>
+                <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.6fr)_minmax(0,1.4fr)] gap-x-2 gap-y-0.5">
+                  <span className="text-[11px] font-medium">Month</span>
+                  <span className="text-[11px] font-medium text-right">Meter</span>
+                  <span className="text-[11px] font-medium text-right">kWh</span>
+                  {UNIVERSITY_METRICS.stpElectricity.months.map((m) => (
+                    <React.Fragment key={m.label}>
+                      <span>{m.label}</span>
+                      <span className="font-mono text-right">{m.reading.toLocaleString()}</span>
+                      <span className="font-mono text-right">{m.consumptionKWh.toLocaleString()}</span>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">STP motors & RO plants</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-xs text-muted-foreground">
+              <div>
+                <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide">STP motors</div>
+                <div className="space-y-0.5">
+                  {UNIVERSITY_METRICS.stpMotors.rows.map((m) => (
+                    <div key={`${m.hp}-${m.use}`} className="flex items-center justify-between gap-3">
+                      <span>
+                        {m.hp} H.P. – {m.use}
+                      </span>
+                      <span className="font-mono">
+                        {m.installed}/{m.standby}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="mb-1 mt-2 text-[11px] font-semibold uppercase tracking-wide">RO plants</div>
+                <div className="space-y-0.5">
+                  {UNIVERSITY_METRICS.roPlants.plants.map((p, idx) => (
+                    <div key={`${p.location}-${idx}`} className="flex items-center justify-between gap-3">
+                      <span>
+                        {p.capacityLph} LPH – {p.location}
+                      </span>
+                      <span className="font-mono">
+                        {p.installed}/{p.standby}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-1 flex items-center justify-between gap-3">
+                  <span>Total capacity</span>
+                  <span className="font-mono">
+                    {UNIVERSITY_METRICS.roPlants.totalCapacityLph.toLocaleString()} LPH
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Campus electricity (MRU)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-muted-foreground">Total {UNIVERSITY_METRICS.mruElectricity.year}</span>
+                <span className="font-mono font-semibold tabular-nums">
+                  {UNIVERSITY_METRICS.mruElectricity.total.toLocaleString()} {UNIVERSITY_METRICS.mruElectricity.unit}
+                </span>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Monthly breakdown available in the detailed energy audit tables.
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">DG sets & own generation</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm text-muted-foreground">
+              <div className="flex items-center justify-between gap-3">
+                <span>DG sets</span>
+                <span className="font-mono">
+                  {UNIVERSITY_METRICS.dieselGenerators.count} ×{" "}
+                  {UNIVERSITY_METRICS.dieselGenerators.capacityKvaEach} kVA
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3 text-xs">
+                <span>Operating note</span>
+                <span className="text-right">
+                  {UNIVERSITY_METRICS.dieselGenerators.note}
+                </span>
+              </div>
+              <div className="mt-1 space-y-0.5 text-xs">
+                <div className="flex items-center justify-between gap-3">
+                  <span>Diesel used</span>
+                  <span className="font-mono">
+                    {UNIVERSITY_METRICS.ownGeneration.dieselLitres.toLocaleString()} L
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <span>Own-generation output</span>
+                  <span className="font-mono">
+                    {UNIVERSITY_METRICS.ownGeneration.kwh.toLocaleString()} kWh
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <span>Avg. unit rate</span>
+                  <span className="font-mono">
+                    ₹{UNIVERSITY_METRICS.ownGeneration.averageUnitRateRs.toFixed(2)}/kWh
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Transport & buses</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              {UNIVERSITY_METRICS.schoolBuses.note}
             </CardContent>
           </Card>
         </div>
